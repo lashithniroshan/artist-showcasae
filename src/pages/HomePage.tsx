@@ -14,6 +14,10 @@ export const HomePage :React.FC= () => {
  // Fetch default artist albums
  const { data: albums, isLoading, error } = useAlbums(defaultArtist);
 
+ const handleAlbumClick = (album: Album) => {
+ const artistName = typeof album.artist === 'string' ? album.artist : album.artist.name;
+ navigate(`/album/${encodeURIComponent(artistName)}/${encodeURIComponent(album.name)}`);
+}
 
  //Default view: Show artist albums
  const validAlbums = (albums || []).filter(album => album.artist !== undefined);
@@ -22,6 +26,7 @@ export const HomePage :React.FC= () => {
     <Container maxW="container.xl" py={8}>
         <AlbumGrid
       albums={validAlbums as Album[]}
+      onAlbumClick={handleAlbumClick}
        isLoading={isLoading}
         error={error}
          title={`Top Album by ${defaultArtist}`} 

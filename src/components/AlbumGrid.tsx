@@ -5,6 +5,7 @@ import { AlbumCard } from "./AlbumCard";
 
 interface AlbumGridProps {
     albums: Album[];
+    onAlbumClick: (album: Album) => void;
     isLoading?: boolean;
     error?: Error | null;
     title?: string;
@@ -14,6 +15,7 @@ type SortOption = 'playcount' | 'name';
 
 export const AlbumGrid = ({ 
         albums,
+        onAlbumClick,
          isLoading,
           error ,
          title = 'Albums'
@@ -87,6 +89,7 @@ base: 'repeat(1, 1fr)',
                                 <AlbumCard
                                  key={`${album.name}-${index}`}
                                   album={album} 
+                                  onClick={()=> onAlbumClick(album)}
                                   />
                             ))}
 

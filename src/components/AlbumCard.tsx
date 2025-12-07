@@ -4,14 +4,15 @@ import { getImageUrl, formatNumber } from "../utils/formatters";
 
 interface AlbumCardProps {
     album:Album;
-
+onClick: () => void;
 }
 
-export const AlbumCard = ({album}:AlbumCardProps) => {
+export const AlbumCard = ({album, onClick}:AlbumCardProps) => {
     const artistName = typeof album.artist === 'string' ? album.artist : album.artist.name;
 
     return (
         <Card
+        onClick={onClick}
         cursor="pointer"
       transition="all 0.2s"
       _hover={{
