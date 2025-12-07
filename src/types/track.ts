@@ -24,5 +24,5 @@ export interface Track {
 export interface FavouriteTrack extends Track {
   addedAt: number;
   albumName?: string;
-  artistName?: string;
+  artistName: string;
 }

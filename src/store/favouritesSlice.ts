@@ -44,12 +44,12 @@ const favouritesSlice = createSlice({
           )
       );
     },
-    ClearFavourites(state) {
+    clearFavourites(state) {
       state.items = [];
     },
   },
 });
 
-export const { addFavourite, removeFavourite, ClearFavourites } =
+export const { addFavourite, removeFavourite, clearFavourites } =
   favouritesSlice.actions;
 export default favouritesSlice.reducer;

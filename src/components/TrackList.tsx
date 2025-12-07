@@ -1,7 +1,17 @@
-import { VStack, HStack, Text, Flex, Box, Divider, IconButton } from "@chakra-ui/react";
+import {
+  VStack,
+  HStack,
+  Text,
+  Flex,
+  Box,
+  Divider,
+  IconButton,
+  useToast,
+} from "@chakra-ui/react";
 import type { Track } from "../types/track";
 import { formatDuration } from "../utils/formatters";
 import { Heart } from "lucide-react";
+import { useFavourites } from "../hooks/useFavourites";
 
 interface TrackListProps {
   tracks: Track[];
@@ -9,7 +19,36 @@ interface TrackListProps {
   artistName?: string;
 }
 
-export const TrackList = ({ tracks }: TrackListProps) => {
+export const TrackList = ({
+  tracks,
+  albumName,
+  artistName,
+}: TrackListProps) => {
+  const { addToFavourites, isFavourite } = useFavourites();
+  const toast = useToast();
+
+  const handleAddFavourite = (track: Track) => {
+    const trackWithAlbum = {
+      ...track,
+      album: albumName ? { title: albumName } : track.album,
+      artist: artistName ? { name: artistName } : track.artist,
+    };
+    addToFavourites(trackWithAlbum);
+    toast({
+      title: "Added to favourites",
+      description: `${track.name} has been added to your favourites.`,
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
+  };
+
+  const getArtistName = (track: Track): string => {
+    if (artistName) return artistName;
+    if (typeof track.artist === "string") return track.artist;
+    return track.artist?.name || "Unknown Artist";
+  };
+
   if (!tracks || tracks.length === 0) {
     return (
       <Text color="gray.500" py={8} textAlign="center">
@@ -21,6 +60,8 @@ export const TrackList = ({ tracks }: TrackListProps) => {
   return (
     <VStack spacing={0} align="stretch" divider={<Divider />}>
       {tracks.map((track, index) => {
+        const trackArtistName = getArtistName(track);
+        const isFav = isFavourite(track.name, trackArtistName);
         return (
           <Flex
             key={`${track.name}-${index}`}
@@ -61,11 +102,15 @@ export const TrackList = ({ tracks }: TrackListProps) => {
               )}
             </HStack>
             <IconButton
-            aria-label="Add to favourites"
-            icon={<Heart size={18} />}
-            colorScheme="brand"
-            variant="ghost"
-            size="sm"
+              aria-label={
+                isFav ? "Remove from favourites" : "Add to favourites"
+              }
+              icon={<Heart size={18} fill={isFav ? "currentColor" : "none"} />}
+              onClick={() => !isFav && handleAddFavourite(track)}
+              isDisabled={isFav}
+              colorScheme={isFav ? "red" : "brand"}
+              variant={isFav ? "solid" : "ghost"}
+              size="sm"
             />
           </Flex>
         );
