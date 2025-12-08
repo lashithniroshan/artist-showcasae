@@ -46,13 +46,15 @@ export const FavouritesList = () => {
     });
   };
   const handleClearAll = () => {
-    clearAllFavourites();
-    toast({
-      title: "All Favourites Cleared",
-      status: "info",
-      duration: 2000,
-      isClosable: true,
-    });
+    if (window.confirm("Are you sure you want to clear all favourites?")) {
+      clearAllFavourites();
+      toast({
+        title: "All Favourites Cleared",
+        status: "info",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
   };
 
   if (count === 0) {
